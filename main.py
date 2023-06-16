@@ -18,12 +18,14 @@ def get_data():
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    #customer_input =[2,0,2,0,2,0,2,0]
+    #customer_input =[5,3,2,1,2,1,2,1]
     customer_input = get_data()
     s = Supermarket(customer_input)
     s.simulate(3)  # 5
     s.path_table.to_csv('output.csv')
-    print(s.checkout_queue)
+
+
+    #print(s.checkout_queue)
     # s.print_path()
     '''s=Supermarket()
     s.simulate(5)

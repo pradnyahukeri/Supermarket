@@ -1,5 +1,6 @@
 import numpy as np
 from transition import TRANSITION_MATRIX
+from tiles_skeleton import SupermarketMap
 
 
 class Customer:
@@ -9,18 +10,25 @@ class Customer:
     """
 
     def __init__(self, name, location='entry', transition_probs=TRANSITION_MATRIX, budget=100):
-        '''
-        Customer attributes
+        # def __init__(self, name, supermarket: SupermarketMap, avatar, row, col, location='entry',
+        #             transition_probs=TRANSITION_MATRIX, budget=100):
+
+        """
+        supermarket: A SuperMarketMap object
+        avatar : a numpy array containing a 32x32 tile image
+        row: the starting row
+        col: the starting column
         name : of the customer
         location : in the supermarket
         budget : amount carried by the customer
         path : path of traversed by the customer in the supermarket
         TM : Transition matrix calculated from the data
-        active : is the customer still in the supermarket?
         total_time - the customer spends in the supermarket
-        '''
-       
-
+        """
+        # self.supermarket = supermarket
+        # self.avatar = avatar
+        # self.row = row
+        # self.col = col
         self.name = name
         self.location = location
         self.budget = budget

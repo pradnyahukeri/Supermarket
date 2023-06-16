@@ -1,3 +1,4 @@
+import tiles_skeleton
 from Customer import Customer
 from faker import Faker
 import pandas as pd
@@ -17,9 +18,14 @@ class Supermarket:
         self.checkout_queue = []
         self.customer_table = pd.DataFrame()
         self.checkout_speed = 1
+        self.total_customers=0
+        self.all_visiting_customers=[]
+        #self.background = np.zeros((500, 700, 3), np.uint8)
+        #self.tiles = cv2.imread("tiles.png")
+
 
     def __repr__(self) -> str:
-        return f'At time {self.time}, there are {self.active_customers} in the super market'
+        return f'Currently, there are {self.active_customers} in the super market'
 
     def add_customers(self, number):
         '''
@@ -31,7 +37,11 @@ class Supermarket:
         for i in range(number):
             name = f.name()
             c = Customer(name)
+            #c = Customer(name, sm(tiles_skeleton.MARKET, self.tiles), )
             self.active_customer_list.append(c)
+            self.all_visiting_customers.append(c)
+
+
 
     def update_customer_list(self, new_customers):
         """
@@ -54,16 +64,19 @@ class Supermarket:
         print('-----SIMULATION BEGIN-----')
         for i in range(0, self.time_steps):
             self.update_customer_list(self.customer_input[i])
+            self.total_customers+=self.customer_input[i]
+            self.move_all()
             print('-----Active customers in the Supermarket-----')
             self.print_customer_list()
-            for i in range(no_of_counters):
+            self.write_timestep(i)
+            for i in range(1, no_of_counters+1):
+                #print(i, len(self.checkout_queue))
                 if len(self.checkout_queue) > 0:
                     self.checkout()
-            self.move_all()
-            self.write_timestep(i)
-            # self.write_in_customer_table(i)
+
+            #self.write_in_customer_table(i)
         print('----- SIMULATION END -----')
-        # print(self)
+        print(self)
 
     def checkout(self):
         """
@@ -73,7 +86,10 @@ class Supermarket:
         :return:
         """
         self.checkout_queue[0].set_inactive()
+        print(f'does it work? {self.checkout_queue}')
         del self.checkout_queue[0]
+        print(self.checkout_queue)
+
         # self.customer_table.append([[customer.name,]])
 
     def set_checkout_speed(self, customer):
@@ -105,12 +121,13 @@ class Supermarket:
                 checkout_no += 1
         new_row = {
             'timesteps': time_step_no,
-            'numberofcustomers': self.active_customers,
+            'numberofcustomers': self.total_customers,
             'fruit': fruit_no,
             'dairy': dairy_no,
             'spices': spice_no,
             'drink': drink_no,
-            'checkout': checkout_no
+            'checkout': checkout_no,
+            'left': self.total_customers-self.active_customers# len([customer for customer in self.active_customer_list if not customer.active])
         }
         tempdf = pd.DataFrame(new_row, index=['index'])
         # self.path_table.loc(tempSeries)
@@ -127,9 +144,3 @@ class Supermarket:
         else:
             for customer in self.active_customer_list:
                 print(customer.name)
-
-
-if __name__ == '__main__':
-    #customer_input =[2,0,2,0,2,0,2,0]
-    customer_input = get_data()
-    s = Supermarket(customer_input)
